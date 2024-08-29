@@ -1,0 +1,13 @@
+---
+ansible_user: sudouser
+
+# Compose
+appdata_path: /mnt/user/appdata
+
+projects:
+  #- dns
+  - port
+
+dns:
+  ip: 172.16.0.4
+

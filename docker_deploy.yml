@@ -1,0 +1,14 @@
+---
+- hosts: all
+  become: true
+  gather_facts: false
+
+  tasks:
+    - name: "Create compose projects"
+      community.docker.docker_compose_v2:
+        project_name: "{{ item }}"
+        definition: "{{ lookup('ansible.builtin.template', 'compose/' + item + '.yml') | from_yaml }}"
+      loop: "{{ projects | flatten(levels=1) }}"
+      loop_control:
+        index_var: i
+        

@@ -1,0 +1,21 @@
+---
+version: '3'
+
+networks:
+  DMZ:
+    external: true
+  proxy_default:
+    external: true
+
+services:
+  adguard:
+    restart: unless-stopped
+    volumes:
+      - "{{ appdata_path }}/dns/adguard/work:/opt/adguardhome/work"
+      - "{{ appdata_path }}/dns/adguard/conf:/opt/adguardhome/conf"
+    networks:
+      DMZ:
+        ipv4_address: "{{ dns.ip }}"
+      proxy_default:
+    image: adguard/adguardhome
+
