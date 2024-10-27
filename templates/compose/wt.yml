@@ -1,0 +1,24 @@
+---
+networks:
+  default:
+    name: proxy_default
+    external: true
+    
+services:
+  watchtower:
+    image: containrrr/watchtower:latest
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:rw
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      TZ: Europe/Berlin
+      WATCHTOWER_CLEANUP: true
+      WATCHTOWER_INCLUDE_RESTARTING: true
+      WATCHTOWER_INCLUDE_STOPPED: true
+      WATCHTOWER_HTTP_API_METRICS: true
+      WATCHTOWER_SCHEDULE: "0 0 5 * * *"
+      WATCHTOWER_HTTP_API_TOKEN: "{{ compose_secrets.wt.token }}"
+      WATCHTOWER_HTTP_API_UPDATE: true
+      WATCHTOWER_HTTP_API_PERIODIC_POLLS: true
+    restart: always
+    

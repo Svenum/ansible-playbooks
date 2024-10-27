@@ -1,13 +1,11 @@
 ---
-version: '3'
-
 services:
-    portainer:
-      restart: unless-stopped
-      volumes:
-        - "{{ appdata_path }}/port/portainer/data:/data"
-        - "/var/run/docker.sock:/var/run/docker.sock"
-      ports:
-        - "9443:9443"
-      image: portainer/portainer-ee:latest
+  portainer:
+    restart: unless-stopped
+    volumes:
+      - "{{ appdata_path }}/port/portainer/data:/data"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    ports:
+      - "9443:9443"
+    image: portainer/portainer-ee:latest
 

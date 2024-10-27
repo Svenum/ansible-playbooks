@@ -1,8 +1,7 @@
 ---
-version: '3'
-
 networks:
-  DMZ:
+  default:
+    name: DMZ
     external: true
   proxy_default:
     external: true
@@ -14,8 +13,8 @@ services:
       - "{{ appdata_path }}/dns/adguard/work:/opt/adguardhome/work"
       - "{{ appdata_path }}/dns/adguard/conf:/opt/adguardhome/conf"
     networks:
-      DMZ:
-        ipv4_address: "{{ dns.ip }}"
+      default:
+        ipv4_address: "{{ compose.dns.ip }}"
       proxy_default:
-    image: adguard/adguardhome
+    image: adguard/adguardhome:latest
 

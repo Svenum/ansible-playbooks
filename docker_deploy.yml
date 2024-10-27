@@ -1,13 +1,39 @@
 ---
 - hosts: all
   become: true
-  gather_facts: false
+  gather_facts: true
 
   tasks:
+    - name: "Include credentials"
+      ansible.builtin.include_vars: ./vars/.credentials.yml
+
+    - name: "Create proxy_default network"
+      community.docker.docker_network:
+        name: proxy_default
+        attachable: true
+        appends: true
+
+    - name: "Deploy DMZ network"
+      community.docker.docker_network:
+        name: DMZ
+        driver: "ipvlan"
+        attachable: false
+        appends: true
+        scope: local
+        driver_options:
+          parent: "{{ shim_parent_interface }}"
+        ipam_driver_options: {}
+        ipam_config:
+          - gateway: 172.16.0.1
+            subnet: 172.16.0.0/24
+            aux_addresses:
+              server: 172.16.0.13
+
     - name: "Create compose projects"
       community.docker.docker_compose_v2:
         project_name: "{{ item }}"
         definition: "{{ lookup('ansible.builtin.template', 'compose/' + item + '.yml') | from_yaml }}"
+        state: present 
       loop: "{{ projects | flatten(levels=1) }}"
       loop_control:
         index_var: i

@@ -1,0 +1,18 @@
+---
+- name: "Login into Bitwarden and get Secret"
+  ansible.builtin.shell: |
+    bw config server {{ bw.url }} >> /dev/null
+    if [[ ! $(bw login --check >> /dev/null) ]]; then
+      bw login {{ bw.email }} '{{ bw.password }}' >> /dev/null
+    fi
+    export BW_SESSION=$(bw unlock '{{ bw.password }}' --raw)
+    bw get item {{ bw.secret_id }}
+    bw lock >> /dev/null
+  register: res
+  no_log: true
+
+- name: "Set secret var"
+  ansible.builtin.set_fact:
+    secret: "{{ res.stdout }}"
+  no_log: true
+

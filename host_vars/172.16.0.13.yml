@@ -1,0 +1,21 @@
+---
+ansible_user: sudouser
+ansible_become_user: sudouser
+
+# Compose
+shim_parent_interface: br0
+appdata_path: /mnt/user/appdata
+
+projects:
+  - dns
+  - port
+  - ts
+  - wt
+
+compose:
+  dns:
+    ip: 172.16.0.4
+  ts:
+    hostname: srv-raspi5
+    advertise_routes: 172.16.0.0/24
+

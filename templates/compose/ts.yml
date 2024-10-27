@@ -1,0 +1,13 @@
+---
+services:
+  tailscaled:
+    image: tailscale/tailscale:latest
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - "{{ appdata_path }}/ts/tailscaled:/var/lib/tailscale"
+    environment:
+      TS_AUTHKEY: "{{ compose_secrets.ts.authkey }}"
+      TS_HOSTNAME: "{{ compose.ts.hostname }}"
+      TS_EXTRA_ARGS: "--accept-routes --advertise-exit-node --advertise-routes={{ compose.ts.advertise_routes }}"
+  
