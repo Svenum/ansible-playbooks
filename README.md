@@ -1,3 +1,8 @@
 # ansible
 Ansible playbook collection to manage my homelab.
-Some Playbooks or roles are based on nix!
+
+# Plabook Collection:
+|Playbook|Description|
+|-|-|
+|docker_deploy.yml|Deploy Docker Compose files in `templates/compose/`|
+
