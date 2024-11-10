@@ -1,11 +1,18 @@
 ---
+networks:
+  proxy_default:
+    external: true
 services:
   portainer:
     restart: unless-stopped
     volumes:
       - "{{ appdata_path }}/port/portainer/data:/data"
       - "/var/run/docker.sock:/var/run/docker.sock"
-    ports:
-      - "9443:9443"
+    networks:
+      proxy_default:
     image: portainer/portainer-ee:latest
-
+    labels:
+      traefik.enable: true
+      traefik.http.routers.portainer.entryPoints: https
+      traefik.http.services.portainer.loadbalancer.server.scheme: https
+      traefik.http.services.portainer.loadbalancer.server.port: 9443

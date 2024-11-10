@@ -13,9 +13,9 @@
         attachable: true
         appends: true
 
-    - name: "Deploy DMZ network"
+    - name: "Deploy br0 network"
       community.docker.docker_network:
-        name: DMZ
+        name: br0
         driver: "ipvlan"
         attachable: false
         appends: true

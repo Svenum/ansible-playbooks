@@ -1,0 +1,40 @@
+---
+networks:
+  br0:
+    name: br0 
+    external: true
+  proxy_default:
+    external: true
+    
+services:
+  traefik:
+    restart: unless-stopped
+    image: traefik:latest
+    volumes:
+      - "{{ appdata_path }}/proxy/traefik:/etc/traefik/"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    networks:
+      br0:
+        ipv4_address: "{{ compose.proxy.ip }}"
+      proxy_default:
+    dns:
+      - 1.1.1.1
+      - 1.0.0.1
+    environment:
+      CLOUDFALRE_EMAIL: "{{ compose_secrets.proxy.email }}"
+      CLOUDFLARE_DNS_API_TOKEN: "{{ compose_secrets.proxy.apitoken }}"
+    labels:
+      traefik.enable: true
+      traefik.http.routers.traefik.entryPoints: https
+      traefik.http.services.traefik.loadbalancer.server.port: 8080
+      
+  sablier:
+    restart: unless-stopped
+    image: sablierapp/sablier:1.8.1
+    volumes:
+      - "{{ appdata_path }}/proxy/sablier/sablier.yaml:/etc/sablier/sablier.yaml"
+      - "{{ appdata_path }}/proxy/sablier/sablier.json:/etc/sablier/sablier.json"
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      proxy_default:
+

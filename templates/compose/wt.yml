@@ -10,6 +10,8 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:rw
       - /etc/localtime:/etc/localtime:ro
+    ports:
+      - 9080:8080
     environment:
       TZ: Europe/Berlin
       WATCHTOWER_CLEANUP: true

@@ -1,7 +1,7 @@
 ---
 networks:
   default:
-    name: DMZ
+    name: br0
     external: true
   proxy_default:
     external: true
@@ -17,4 +17,9 @@ services:
         ipv4_address: "{{ compose.dns.ip }}"
       proxy_default:
     image: adguard/adguardhome:latest
+    labels:
+      traefik.enable: true
+      traefik.http.routers.adguard.entryPoints: https
+      traefik.http.services.adguard.loadbalancer.server.scheme: http
+      traefik.http.services.adguard.loadbalancer.server.port: 80
 
