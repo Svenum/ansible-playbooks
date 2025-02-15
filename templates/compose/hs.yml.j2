@@ -1,0 +1,47 @@
+---
+networks:
+  default:
+  proxy_default:
+    external: true
+
+services:
+  headscale:
+    image: "headscale/headscale:latest"
+    restart: "unless-stopped"
+    command: "serve"
+    volumes:
+      - "{{ appdata_path }}/hs/headscale/data:/var/lib/headscale"
+      - "{{ appdata_path }}/hs/headscale/configs:/etc/headscale"
+    ports:
+      - "8080:8080"
+    environment:
+      TZ: "Europe/Berlin"
+    networks:
+      proxy_default:
+      default:
+
+  headplane:
+    image: ghcr.io/tale/headplane:latest
+    restart: unless-stopped
+    volumes:
+      - "{{ appdata_path }}/hs/headplane/data:/var/lib/headscale"
+      - "{{ appdata_path }}/hs/headplane/configs:/etc/headscale"
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    environment:
+      COOKIE_SECRET: "{{ compose_secrets.hs.cookie_secret }}"
+
+      HEADSCALE_INTEGRATION: "docker"
+      HEADSCALE_CONTAINER: "hs-headscale-1"
+      DISABLE_API_KEY_LOGIN: "true"
+      HOST: "0.0.0.0"
+      PORT: "3000"
+        
+      # Only set this to false if you aren"t behind a reverse proxy
+      COOKIE_SECURE: "true"
+
+      OIDC_CLIENT_ID: "{{ compose_secrets.hs.oidc_client_id }}"
+      OIDC_ISSUER: "{{ compose_secrets.hs.oidc_issuer }}"
+      OIDC_CLIENT_SECRET: "{{ compose_secrets.hs.oidc_client_secret }}"
+    networks:
+      proxy_default:
+      default:

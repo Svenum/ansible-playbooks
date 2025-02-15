@@ -1,0 +1,30 @@
+---
+ansible_user: sudouser
+ansible_become_user: sudouser
+
+# Compose
+shim_parent_interface: br0
+ipam_config:
+  - gateway: 172.16.0.1
+    subnet: 172.16.0.0/24
+    aux_addresses:
+      server: 172.16.0.13
+appdata_path: /mnt/user/appdata
+
+projects:
+  - dns
+  - port
+  - ts
+  - wt
+  - proxy
+
+compose:
+  dns:
+    ip: 172.16.0.4
+  ts:
+    hostname: srv-raspi5
+    advertise_routes: 172.16.0.0/24
+  proxy:
+    ip: 172.16.0.9
+    ipvlan: true
+

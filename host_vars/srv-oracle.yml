@@ -1,0 +1,27 @@
+---
+ansible_user: sudouser
+ansible_become_user: sudouser
+
+# Compose
+shim_parent_interface: br0
+ipam_config:
+  - gateway: 172.20.0.1
+    subnet: 172.20.0.0/24
+    aux_addresses:
+      server: 172.20.0.214
+appdata_path: /mnt/user/appdata
+
+projects:
+  #- hs
+  #- ts
+  #- wt
+  - proxy
+  #- port
+
+compose:
+  ts:
+    hostname: srv-oracle
+    advertise_routes: 172.20.0.0/24
+  proxy:
+    ip: 172.20.0.9
+    ipvlan: false
