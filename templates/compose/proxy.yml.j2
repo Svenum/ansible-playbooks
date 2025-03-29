@@ -27,8 +27,8 @@ services:
 {% endif %}
       proxy_default:
     dns:
-      - 1.1.1.1
-      - 1.0.0.1
+      - 9.9.9.9
+      - 149.112.112.112
     environment:
       CLOUDFALRE_EMAIL: "{{ compose_secrets.proxy.email }}"
       CLOUDFLARE_DNS_API_TOKEN: "{{ compose_secrets.proxy.apitoken }}"

@@ -12,6 +12,7 @@ ipam_config:
 appdata_path: /mnt/user/appdata
 
 projects:
+  - mon
   - dns
   - port
   - ts
@@ -25,6 +26,6 @@ compose:
     hostname: srv-raspi5
     advertise_routes: 172.16.0.0/24
   proxy:
-    ip: 172.16.0.9
+    ip: 172.16.0.5
     ipvlan: true
 

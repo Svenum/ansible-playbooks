@@ -1,0 +1,42 @@
+networks:
+  proxy_default:
+    external: true
+
+services:
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:latest
+    restart: unless-stopped
+    command:
+      - "--docker_only=true"
+      - "--housekeeping_interval=30s"
+      - "--disable_metrics=percpu,sched,tcp,udp,disk,diskIO,hugetlb,referenced_memory,cpu_topology,resctrl"
+      - "--max_housekeeping_interval=35s"
+      - "--event_storage_event_limit=default=0"
+      - "--event_storage_age_limit=default=0"
+      - "--store_container_labels=false"
+      - "--global_housekeeping_interval=30s"
+      - "--event_storage_event_limit=default=0"
+      - "--event_storage_age_limit=default=0"
+      - "--allow_dynamic_housekeeping=true"
+      - "--storage_duration=1m0s"
+    volumes:
+      - /:/rootfs:ro
+      - /sys:/sys:ro
+      - /var/run:/var/run:rw
+      - /var/lib/docker/:/var/lib/docker:ro
+    privileged: true
+    networks:
+      proxy_default:
+    deploy:
+      mode: global
+      update_config:
+        order: stop-first
+      resources:
+        reservations:
+          memory: 80M
+    labels:
+      traefik.enable: true
+      traefik.http.routers.cadvisor.entryPoints: https
+      traefik.http.services.cadvisor.loadbalancer.server.scheme: http
+      traefik.http.services.cadvisor.loadbalancer.server.port: 8080
+          
